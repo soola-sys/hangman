@@ -99,7 +99,7 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 5px;
   justify-content: center;
 } 
 .answer-text {
@@ -108,16 +108,19 @@ body {
 
 .guesses {
   font-size: 18px;
+  /* color:red;
+  font-weight: bold; */
 }
-b {
+.count {
   color:red;
+  font-weight: bold;
 }
 .keyboard__key {
  border-radius: 5px;
  text-transform: uppercase;
  /* background: white; */
  /* background: #738ADB; old*/ 
- background: #3559d8;
+ background-color:#9147ff;
  width: 50px;
  height: 50px;
  cursor: pointer;
@@ -129,4 +132,18 @@ b {
  opacity: 0.6;
  /* box-shadow: 0 2px grey; */
  /* grid-column: span 2; */
+}
+
+.keyboard__key:hover{
+  background-color: #772ce8;
+  opacity: 1;
+}
+
+.keyboard__key:active {
+  box-shadow: 0 2px #666;
+  transform: translateY(1px);
+}
+
+.disabled {
+
 }
