@@ -1,0 +1,44 @@
+ document.querySelector('.keyboard').addEventListener('click', (e) => {
+    let item = e.target;
+    const modal = document.querySelector('.modal-container');
+    if (item.classList.contains('keyboard__key') && (item.closest('button'))) {
+      let currentKey = keysObj[item.dataset.key];
+      if (str.includes(currentKey)) {
+        correctGuess(currentKey);
+      } else if (counter < maxLimit) {
+        counter += 1;
+        addBodyPart(counter);
+        document.querySelector('.counter').textContent = counter;
+        if (counter === 6) {
+          initModal('You Lose', letter);
+          modal.style.display = 'flex';
+          document.querySelector('.close-btn').addEventListener('click', () => {
+            let newtemp;
+            newtemp = shuffle(questions).slice(0, 1);
+            while (temp === newtemp) {
+              newtemp = shuffle(questions).slice(0, 1);
+            }
+            if (temp !== newtemp) {
+              let newLetter = { ...newtemp }[0];
+              initUnderscores(newLetter);
+              initHints(newLetter);
+              modal.style.display = 'none';
+            }
+            counter = 0;
+            resetGallows();
+            document.querySelectorAll('.keyboard__key').forEach((el) => {
+              if (el.classList.contains('disabled')) {
+                el.classList.remove('disabled');
+              }
+            });
+          });
+        }
+      }
+      item.classList.add('disabled');
+    }
+  });
+
+      if(node === key && node.classList.contains('underscore_active')){
+      node.classList.remove('underscore_active');
+      node.textContent = key;
+    }
