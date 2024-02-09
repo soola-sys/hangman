@@ -16,8 +16,8 @@ let questions = [{
   answer: 'Broomstick'
 }, {
   id: 4,
-  hint: 'Witch',
-  answer: 'Casts a spell'
+  hint: 'Spongebob friend',
+  answer: 'Patrick'
 }, {
   id: 5,
   hint: 'Might haunt you',

@@ -30,10 +30,10 @@ function shuffle(arr) {
 let randIndex = createNewArray(questions.length);
 let tempWord = shuffle(randIndex).slice(0, 1).pop();
 let activeWord = questions[tempWord];
-console.log('Old', activeWord);
-let lettersArr = activeWord.answer.replaceAll(' ', '').split('');
 let counter = 0;
 let maxLimit = 6;
+console.log('Old', activeWord);
+let lettersArr = activeWord.answer.replaceAll(' ', '').split('');
 let correctLettersArr = new Array(lettersArr.length).fill('_');
 console.log('CORRECT LETTERS', correctLettersArr);
 
@@ -117,7 +117,7 @@ const initModal = () => {
 };
 /* eslint no-param-reassign: "error" */
 
-const addBodyPart = () => {
+const addBodyPart = (count) => {
   const hangObj = {
     head: 'body__head',
     body: 'body__corpus',
@@ -126,7 +126,7 @@ const addBodyPart = () => {
     leftLeg: 'body__left-leg',
     rightLeg: 'body__right-leg'
   };
-  let className = Object.values(hangObj)[counter];
+  let className = Object.values(hangObj)[count];
   let node = document.querySelector(`.${className}`);
   if (node.classList.contains('hide-gallows')) {
     node.classList.remove('hide-gallows');
@@ -143,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     'afterbegin',
     '<div class="wrapper"><div class="container"><div class="content"></div></div></div>'
   );
-
   insertNode('.content', 'div', 'gallows');
   insertNode('.content', 'div', 'quiz');
   insertNode('.content', 'div', 'modal-container');
@@ -159,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resetGallows();
   insertNode('.keyboard', 'div', 'keyboard__row');
   initKeyboardKeys(keysObj);
+  // document.querySelector('.keyboard')();
   const modal = document.querySelector('.modal-container');
   document.querySelector('.keyboard').addEventListener('click', (e) => {
     let item = e.target;
@@ -201,5 +201,40 @@ document.addEventListener('DOMContentLoaded', () => {
     Array.from(document.querySelectorAll('.keyboard__key')).forEach((el) => {
       el.classList.remove('disabled');
     });
+  });
+  document.addEventListener('keydown', (e) => {
+    let item = document.querySelector(`.keyboard__key[data-key="${e.code}"]`);
+    let str = activeWord.answer.toLowerCase();
+    if (item.classList.contains('disabled')) {
+      return;
+    }
+    if (item.closest('button')) {
+      let currentKey = keysObj[item.dataset.key];
+      if (str.includes(currentKey)) {
+        for (let i = 0; i < str.length; i += 1) {
+          if (str[i] === currentKey) {
+            correctLettersArr[i] = currentKey;
+          }
+        }
+      } else {
+        addBodyPart(counter);
+        counter += 1;
+        document.querySelector('.counter').textContent = counter;
+        if (counter === maxLimit) {
+          displayModal('You Lost');
+          Array.from(document.querySelectorAll('.keyboard__key')).forEach((el) => {
+            el.classList.add('disabled');
+          });
+        }
+      }
+      if (!correctLettersArr.includes('_')) {
+        displayModal('You win');
+        Array.from(document.querySelectorAll('.keyboard__key')).forEach((el) => {
+          el.classList.add('disabled');
+        });
+      }
+      updateGuess();
+      item.classList.add('disabled');
+    }
   });
 });
