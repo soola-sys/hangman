@@ -9,6 +9,7 @@ function createNewArray(value) {
   }
   return result;
 }
+console.log('gegege');
 function shuffle(arr) {
   let newArr = [...arr];
   let currentIndex = arr.length;
@@ -32,10 +33,8 @@ let tempWord = shuffle(randIndex).slice(0, 1).pop();
 let activeWord = questions[tempWord];
 let counter = 0;
 let maxLimit = 6;
-console.log('Old', activeWord);
 let lettersArr = activeWord.answer.replaceAll(' ', '').split('');
 let correctLettersArr = new Array(lettersArr.length).fill('_');
-console.log('CORRECT LETTERS', correctLettersArr);
 
 const appendStyles = (path) => {
   let head = document.getElementsByTagName('head')[0];
@@ -132,11 +131,28 @@ const addBodyPart = (count) => {
     node.classList.remove('hide-gallows');
   }
 };
+
 function updateGuess() {
   let arr = Array.from(document.querySelectorAll('.letter'));
   arr.forEach((node, index) => {
     node.textContent = correctLettersArr[index];
   });
+}
+
+function checkGuess(str, item) {
+  let currentKey = keysObj[item.dataset.key];
+  if (str.includes(currentKey)) {
+    for (let i = 0; i < str.length; i += 1) {
+      if (str[i] === currentKey) {
+        correctLettersArr[i] = currentKey;
+      }
+    }
+  } else {
+    addBodyPart(counter);
+    counter += 1;
+    document.querySelector('.counter').textContent = counter;
+    if (counter === maxLimit) displayModal('You Lost');
+  }
 }
 document.addEventListener('DOMContentLoaded', () => {
   document.body.insertAdjacentHTML(
@@ -164,26 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let item = e.target;
     let str = activeWord.answer.toLowerCase();
     if (item.classList.contains('keyboard__key') && (item.closest('button'))) {
-      let currentKey = keysObj[item.dataset.key];
-      if (str.includes(currentKey)) {
-        for (let i = 0; i < str.length; i += 1) {
-          if (str[i] === currentKey) {
-            correctLettersArr[i] = currentKey;
-          }
-        }
-      } else {
-        addBodyPart(counter);
-        counter += 1;
-        document.querySelector('.counter').textContent = counter;
-        if (counter === maxLimit) displayModal('You Lost');
-      }
+      checkGuess(str, item);
       if (!correctLettersArr.includes('_')) displayModal('You win');
       updateGuess();
       item.classList.add('disabled');
     }
   });
   document.querySelector('.close-btn').addEventListener('click', () => {
-    console.log(activeWord);
     modal.style.display = 'none';
     counter = 0;
     while (activeWord === questions[tempWord]) {
@@ -209,24 +212,25 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (item.closest('button')) {
-      let currentKey = keysObj[item.dataset.key];
-      if (str.includes(currentKey)) {
-        for (let i = 0; i < str.length; i += 1) {
-          if (str[i] === currentKey) {
-            correctLettersArr[i] = currentKey;
-          }
-        }
-      } else {
-        addBodyPart(counter);
-        counter += 1;
-        document.querySelector('.counter').textContent = counter;
-        if (counter === maxLimit) {
-          displayModal('You Lost');
-          Array.from(document.querySelectorAll('.keyboard__key')).forEach((el) => {
-            el.classList.add('disabled');
-          });
-        }
-      }
+      checkGuess(str, item);
+      // let currentKey = keysObj[item.dataset.key];
+      // if (str.includes(currentKey)) {
+      //   for (let i = 0; i < str.length; i += 1) {
+      //     if (str[i] === currentKey) {
+      //       correctLettersArr[i] = currentKey;
+      //     }
+      //   }
+      // } else {
+      //   addBodyPart(counter);
+      //   counter += 1;
+      //   document.querySelector('.counter').textContent = counter;
+      //   if (counter === maxLimit) {
+      //     displayModal('You Lost');
+      //     Array.from(document.querySelectorAll('.keyboard__key')).forEach((el) => {
+      //       el.classList.add('disabled');
+      //     });
+      //   }
+      // }
       if (!correctLettersArr.includes('_')) {
         displayModal('You win');
         Array.from(document.querySelectorAll('.keyboard__key')).forEach((el) => {
